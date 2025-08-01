@@ -368,13 +368,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentS
                     <button onClick={() => handleUpdate('theme', 'dark')} className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border-2 transition-colors ${currentSettings.theme === 'dark' ? 'bg-indigo-400/20 text-indigo-700 dark:text-indigo-200 border-indigo-500' : 'bg-gray-100 dark:bg-slate-800 border-transparent hover:border-indigo-300'}`}>{t('darkTheme')}</button>
                 </div>
             </InputRow>
-            
-            <InputRow label={t('languageLabel')}>
-              <select value={currentSettings.language} onChange={(e) => handleUpdate('language', e.target.value as 'en' | 'ms')} className="w-full bg-gray-100 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg py-2 px-3 focus:ring-2 focus:ring-purple-400 focus:outline-none">
-                <option value="en">English</option>
-                <option value="ms">Bahasa Melayu</option>
-              </select>
-            </InputRow>
 
           </div>
           

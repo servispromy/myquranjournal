@@ -14,7 +14,7 @@ interface FindGuidancePageProps {
 }
 
 const FindGuidancePage: React.FC<FindGuidancePageProps> = ({ settings, onBack, onVerseSelect }) => {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const [issueText, setIssueText] = useState('');
   const [isFindingGuidance, setIsFindingGuidance] = useState(false);
   const [guidanceError, setGuidanceError] = useState<string | null>(null);
@@ -27,7 +27,7 @@ const FindGuidancePage: React.FC<FindGuidancePageProps> = ({ settings, onBack, o
     setGuidanceError(null);
     setSuggestions([]);
     try {
-      const result = await suggestVersesForIssue(issueText, lang);
+      const result = await suggestVersesForIssue(issueText);
       setSuggestions(result);
     } catch (err: any) {
       setGuidanceError(err.message || t('findGuidanceNoResults'));

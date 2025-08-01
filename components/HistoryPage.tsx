@@ -13,7 +13,7 @@ interface HistoryPageProps {
 
 const HistoryPage: React.FC<HistoryPageProps> = ({ settings, onBack, onDeleteHistoryItem }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const [openItemDate, setOpenItemDate] = useState<string | null>(null);
 
 
@@ -49,7 +49,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ settings, onBack, onDeleteHis
   }, [searchTerm, settings.history]);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(lang === 'ms' ? 'ms-MY' : 'en-CA', {
+    return new Date(dateString).toLocaleDateString('ms-MY', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

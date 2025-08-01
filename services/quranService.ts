@@ -1,10 +1,7 @@
-
 import { VerseContent, TafsirApiResponse, Tafsir } from '../types';
 import { SURAH_VERSE_COUNTS, SURAH_NAMES } from '../constants';
-import { translateTafsirContent } from './geminiService';
 
 const QURAN_COM_API_BASE = 'https://api.quran.com/api/v4';
-
 
 const LANGUAGE_MAP = {
   en: '20', // Dr. Mustafa Khattab, the Clear Quran
@@ -61,11 +58,10 @@ const mapApiVerseToVerseContent = (apiVerse: ApiVerse): VerseContent | null => {
 
 export const getVerseContent = async (
   surahNumber: number,
-  ayahNumber: number,
-  language: 'en' | 'ms'
+  ayahNumber: number
 ): Promise<VerseContent> => {
   const verseKey = `${surahNumber}:${ayahNumber}`;
-  const translationId = LANGUAGE_MAP[language];
+  const translationId = LANGUAGE_MAP['ms'];
 
   const url = `${QURAN_COM_API_BASE}/verses/by_key/${verseKey}?translations=${translationId}&fields=text_uthmani,juz_number,page_number`;
 
@@ -95,12 +91,11 @@ export const getVerseContent = async (
 export const getVersesInRange = async (
     surahNumber: number,
     startAyah: number,
-    endAyah: number,
-    language: 'en' | 'ms'
+    endAyah: number
 ): Promise<VerseContent[]> => {
     const promises: Promise<VerseContent>[] = [];
     for (let i = startAyah; i <= endAyah; i++) {
-        promises.push(getVerseContent(surahNumber, i, language));
+        promises.push(getVerseContent(surahNumber, i));
     }
     try {
         const verses = await Promise.all(promises);
@@ -112,10 +107,9 @@ export const getVersesInRange = async (
 };
 
 export const getVersesForPage = async (
-    pageNumber: number,
-    language: 'en' | 'ms'
+    pageNumber: number
 ): Promise<VerseContent[]> => {
-    const translationId = LANGUAGE_MAP[language];
+    const translationId = LANGUAGE_MAP['ms'];
     const url = `${QURAN_COM_API_BASE}/verses/by_page/${pageNumber}?translations=${translationId}&fields=text_uthmani,juz_number,page_number`;
 
     try {
@@ -143,7 +137,7 @@ export const getVersesForPage = async (
     }
 };
 
-export const getVerseTafsir = async (verseKey: string, language: 'en' | 'ms', favoriteTafsir: string): Promise<TafsirApiResponse> => {
+export const getVerseTafsir = async (verseKey: string, favoriteTafsir: string): Promise<TafsirApiResponse> => {
     const [surah, ayah] = verseKey.split(':');
     const url = `https://quranapi.pages.dev/api/tafsir/${surah}_${ayah}.json`;
     try {
@@ -156,17 +150,6 @@ export const getVerseTafsir = async (verseKey: string, language: 'en' | 'ms', fa
         if (data && data.tafsirs && data.tafsirs.length > 0) {
             // Find the favorite tafsir, or fallback to the first one
             const selectedTafsir = data.tafsirs.find(t => t.author === favoriteTafsir) || data.tafsirs[0];
-            
-            // If language is Malay and an API key is available in env, translate the content.
-            if (language === 'ms' && process.env.API_KEY) {
-                const [translatedContent, translatedGroupVerse] = await Promise.all([
-                    translateTafsirContent(selectedTafsir.content),
-                    selectedTafsir.groupVerse ? translateTafsirContent(selectedTafsir.groupVerse) : Promise.resolve(null)
-                ]);
-                const translatedTafsir: Tafsir = { ...selectedTafsir, content: translatedContent, groupVerse: translatedGroupVerse };
-                return { ...data, tafsirs: [translatedTafsir] };
-            }
-            
             return { ...data, tafsirs: [selectedTafsir] };
         } else {
             throw new Error("Tafsir not found for this verse.");

@@ -1,9 +1,9 @@
 import { UserSettings, TadabburLevel } from '../types';
 import { TADABBUR_LEVELS } from '../constants';
 
-export const getPersonaInstruction = (userProfile: { gender: 'male' | 'female', age: string, roles: string[], country: string, roleOther?: string }, language: 'en' | 'ms'): string => {
+export const getPersonaInstruction = (userProfile: Partial<UserSettings>, language: 'en' | 'ms'): string => {
     const langName = language === 'ms' ? "Malay" : "English";
-    const rolesText = [...userProfile.roles, userProfile.roleOther || ''].filter(Boolean).join(', ');
+    const rolesText = [...(userProfile.roles || []), userProfile.roleOther || ''].filter(Boolean).join(', ');
     
     let personaParts = [];
     if (userProfile.age) personaParts.push(`a ${userProfile.age}-year-old`);
@@ -24,7 +24,6 @@ export const getLevelPromptPart = (level: TadabburLevel): string => {
   const levelDetail = TADABBUR_LEVELS[level];
   if (!levelDetail) return 'a general reflection on the verse.';
 
-  // A more robust way to generate the prompt part based on constants
   switch (level) {
     case TadabburLevel.L1:
       return 'a direct reflection on the single verse provided.';

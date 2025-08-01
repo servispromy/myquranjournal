@@ -25,7 +25,7 @@ const App: React.FC = () => {
                 let parsed = JSON.parse(savedSettings);
 
                 // Default values for new settings
-                if (!parsed.language || parsed.language === 'ar') parsed.language = 'en';
+                if (parsed.language) delete parsed.language; // Remove old language setting
                 if (!parsed.theme) parsed.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 if (!parsed.points) parsed.points = 0;
                 if (!parsed.gender || parsed.gender === 'unspecified') parsed.gender = 'male'; 
@@ -159,7 +159,6 @@ const App: React.FC = () => {
     const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
     const [isDisclaimerInfoModalOpen, setIsDisclaimerInfoModalOpen] = useState(false);
     const [isWhatsNewModalOpen, setIsWhatsNewModalOpen] = useState(false);
-    const [provisionalLanguage, setProvisionalLanguage] = useState<UserSettings['language']>('en');
     
     const [currentPage, setCurrentPage] = useState<Page>('tadabbur');
     const [isPageTransitioning, setIsPageTransitioning] = useState(false);
@@ -205,7 +204,6 @@ const App: React.FC = () => {
             name: name,
             profilePic: null,
             theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-            language: provisionalLanguage,
             gender: 'male',
             roles: [],
             roleOther: '',
@@ -229,7 +227,7 @@ const App: React.FC = () => {
         if (!settings) {
             setIsSettingsOpen(true);
         }
-    }, [provisionalLanguage, settings]);
+    }, [settings]);
     
     const handleSettingsUpdate = (newSettings: UserSettings) => {
       setSettings(prev => {
@@ -355,14 +353,12 @@ const App: React.FC = () => {
 
     if (viewState === 'entry') {
         return (
-            <I18nProvider language={settings?.language || provisionalLanguage}>
+            <I18nProvider>
                 <LoginFlow 
                     isReturningUser={!!settings}
                     onEnter={() => setViewState('main')}
                     onLogin={handleLogin}
                     onOpenUpdateLog={() => setIsUpdateLogOpen(true)}
-                    provisionalLanguage={provisionalLanguage}
-                    onProvisionalLanguageChange={setProvisionalLanguage}
                 />
                 <UpdateLog isOpen={isUpdateLogOpen} onClose={() => setIsUpdateLogOpen(false)} />
             </I18nProvider>
@@ -376,7 +372,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <I18nProvider language={settings.language}>
+        <I18nProvider>
              <div className="min-h-screen w-full bg-transparent transition-colors duration-300">
                 <div className={`transition-opacity duration-150 ${isPageTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                   {(() => {

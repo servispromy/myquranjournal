@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import Welcome from './Welcome';
 import { useI18n } from '../lib/i18n';
@@ -9,11 +10,9 @@ interface LoginFlowProps {
     onEnter: () => void;
     onLogin: (name: string) => void;
     onOpenUpdateLog: () => void;
-    provisionalLanguage: UserSettings['language'];
-    onProvisionalLanguageChange: (lang: UserSettings['language']) => void;
 }
 
-const LoginFlow: React.FC<LoginFlowProps> = ({ isReturningUser, onEnter, onLogin, onOpenUpdateLog, provisionalLanguage, onProvisionalLanguageChange }) => {
+const LoginFlow: React.FC<LoginFlowProps> = ({ isReturningUser, onEnter, onLogin, onOpenUpdateLog }) => {
     const { t } = useI18n();
     const [isEntering, setIsEntering] = useState(false);
     const [isExitingWelcome, setIsExitingWelcome] = useState(false);
@@ -70,8 +69,6 @@ const LoginFlow: React.FC<LoginFlowProps> = ({ isReturningUser, onEnter, onLogin
                         onStart={handleStartJourney} 
                         onOpenUpdateLog={onOpenUpdateLog} 
                         isExiting={isExitingWelcome}
-                        language={provisionalLanguage}
-                        onLanguageChange={onProvisionalLanguageChange}
                     />
                 )}
             </div>

@@ -1,10 +1,9 @@
-const CACHE_NAME = 'tadabbur-quran-cache-v2.2.4';
+const CACHE_NAME = 'tadabbur-quran-cache-v2.2.7';
 const urlsToCache = [
   '/',
   '/index.html',
   '/index.tsx',
   '/manifest.json',
-  '/locales/en.json',
   '/locales/ms.json'
 ];
 

@@ -10,10 +10,9 @@ interface VerseModalProps {
   isOpen: boolean;
   onClose: () => void;
   verseKey: string | null;
-  language: 'en' | 'ms';
 }
 
-const VerseModal: React.FC<VerseModalProps> = ({ isOpen, onClose, verseKey, language }) => {
+const VerseModal: React.FC<VerseModalProps> = ({ isOpen, onClose, verseKey }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verseData, setVerseData] = useState<VerseContent | null>(null);
@@ -28,7 +27,7 @@ const VerseModal: React.FC<VerseModalProps> = ({ isOpen, onClose, verseKey, lang
         setVerseData(null);
         try {
           const [sNum, aNum] = verseKey.split(':');
-          const verseResult = await getVerseContent(parseInt(sNum), parseInt(aNum), language);
+          const verseResult = await getVerseContent(parseInt(sNum), parseInt(aNum));
           setVerseData(verseResult);
         } catch (err: any) {
           setError(err.message || t('errorUnknown'));
@@ -41,7 +40,7 @@ const VerseModal: React.FC<VerseModalProps> = ({ isOpen, onClose, verseKey, lang
     if (isOpen) {
       fetchVerse();
     }
-  }, [isOpen, verseKey, language, t]);
+  }, [isOpen, verseKey, t]);
 
   const handleClose = () => {
     setIsClosing(true);

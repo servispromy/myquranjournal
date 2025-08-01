@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { FiX, FiLoader, FiAlertTriangle, FiBookOpen } from 'react-icons/fi';
 import { getVerseTafsir } from '../services/quranService';
@@ -11,11 +12,10 @@ interface TafsirModalProps {
   isOpen: boolean;
   onClose: () => void;
   verseKey: string | null;
-  language: 'en' | 'ms';
   favoriteTafsir: string;
 }
 
-const TafsirModal: React.FC<TafsirModalProps> = ({ isOpen, onClose, verseKey, language, favoriteTafsir }) => {
+const TafsirModal: React.FC<TafsirModalProps> = ({ isOpen, onClose, verseKey, favoriteTafsir }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tafsirData, setTafsirData] = useState<TafsirApiResponse | null>(null);
@@ -29,7 +29,7 @@ const TafsirModal: React.FC<TafsirModalProps> = ({ isOpen, onClose, verseKey, la
         setError(null);
         setTafsirData(null);
         try {
-          const tafsirResult = await getVerseTafsir(verseKey, language, favoriteTafsir);
+          const tafsirResult = await getVerseTafsir(verseKey, favoriteTafsir);
           setTafsirData(tafsirResult);
         } catch (err: any) {
           setError(err.message || t('errorTafsir'));
@@ -42,7 +42,7 @@ const TafsirModal: React.FC<TafsirModalProps> = ({ isOpen, onClose, verseKey, la
     if (isOpen) {
       fetchTafsir();
     }
-  }, [isOpen, verseKey, t, language, favoriteTafsir]);
+  }, [isOpen, verseKey, t, favoriteTafsir]);
 
   const handleClose = () => {
     setIsClosing(true);

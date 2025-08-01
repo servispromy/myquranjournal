@@ -1,6 +1,5 @@
 
 
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FiX, FiLoader, FiSend, FiMessageCircle } from 'react-icons/fi';
 import { useI18n } from '../lib/i18n';
@@ -18,7 +17,7 @@ interface PersonalHelperModalProps {
 }
 
 const PersonalHelperModal: React.FC<PersonalHelperModalProps> = ({ isOpen, onClose, verseKey, verseContent, tadabburAnalysis, settings }) => {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +59,7 @@ const PersonalHelperModal: React.FC<PersonalHelperModalProps> = ({ isOpen, onClo
     setIsLoading(true);
 
     try {
-      const response = await askAboutVerse(userInput, newMessages, verseKey, verseContent, tadabburAnalysis, { name: settings.name, roles: settings.roles, gender: settings.gender, age: settings.age }, lang);
+      const response = await askAboutVerse(userInput, newMessages, verseKey, verseContent, tadabburAnalysis, settings);
       setMessages(prev => [...prev, { role: 'model', content: response }]);
     } catch (error) {
       console.error(error);
@@ -68,7 +67,7 @@ const PersonalHelperModal: React.FC<PersonalHelperModalProps> = ({ isOpen, onClo
     } finally {
       setIsLoading(false);
     }
-  }, [userInput, isLoading, messages, verseKey, verseContent, tadabburAnalysis, settings, lang, t]);
+  }, [userInput, isLoading, messages, verseKey, verseContent, tadabburAnalysis, settings, t]);
 
   if (!isOpen) return null;
 

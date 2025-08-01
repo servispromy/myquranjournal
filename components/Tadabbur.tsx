@@ -181,10 +181,10 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
 
     const { gregorianDate, hijriDate } = useMemo(() => {
         const today = new Date();
-        const gregorian = new Intl.DateTimeFormat(lang === 'ms' ? 'ms-MY' : 'en-US', { dateStyle: 'long' }).format(today);
-        const hijri = new Intl.DateTimeFormat(lang === 'ms' ? 'ar-u-ca-islamic-nu-latn' : 'en-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(today);
+        const gregorian = new Intl.DateTimeFormat('ms-MY', { dateStyle: 'long' }).format(today);
+        const hijri = new Intl.DateTimeFormat('ar-u-ca-islamic-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' }).format(today);
         return { gregorianDate: gregorian, hijriDate: hijri };
-    }, [lang]);
+    }, []);
     
     useEffect(() => {
         const textarea = tazakkurTextareaRef.current;
@@ -237,9 +237,9 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
         try {
             let verseResult;
             if (reflectionMode === 'single') {
-                verseResult = [await getVerseContent(sNum, startA, lang)];
+                verseResult = [await getVerseContent(sNum, startA)];
             } else {
-                verseResult = await getVersesInRange(sNum, startA, endA, lang);
+                verseResult = await getVersesInRange(sNum, startA, endA);
             }
             setVerseData(verseResult);
             setReflectionStep('verse_ready');
@@ -249,7 +249,7 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
         } finally {
             setIsLoading(false);
         }
-    }, [surahNumber, startAyah, endAyah, reflectionMode, lang, t, resetAudio]);
+    }, [surahNumber, startAyah, endAyah, reflectionMode, t, resetAudio]);
 
 
     useEffect(() => {
@@ -414,7 +414,7 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
             const randomLevel = availableLevels[Math.floor(Math.random() * availableLevels.length)];
             const verseRangeStr = reflectionMode === 'single' ? startAyah : `${startAyah}-${endAyah}`;
             
-            const analysisResult = await generateTadabburAnalysis(surahName, verseRangeStr, verseData, randomLevel, { name: settings.name, language: lang, gender: settings.gender, age: settings.age, roles: settings.roles, country: settings.country }, settings.tadabburDifficulty);
+            const analysisResult = await generateTadabburAnalysis(surahName, verseRangeStr, verseData, randomLevel, { name: settings.name, gender: settings.gender, age: settings.age, roles: settings.roles, country: settings.country }, settings.tadabburDifficulty);
             setAnalysisData(analysisResult);
             setReflectionStep('tadabbur_ready');
         } catch (err: any) {
@@ -422,7 +422,7 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
         } finally {
             setIsLoading(false);
         }
-    }, [surahNumber, startAyah, endAyah, reflectionMode, lang, t, verseData, settings]);
+    }, [surahNumber, startAyah, endAyah, reflectionMode, t, verseData, settings]);
 
     const handleGenerateTadabbur = useCallback(() => {
         performTadabburGeneration();
@@ -444,9 +444,9 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
             const verseRangeStr = reflectionMode === 'single' ? startAyah : `${startAyah}-${endAyah}`;
             
             if (deep) {
-                tazakkurResult = await generateDeeperTazakkur(analysisData, { name: settings.name, roles: settings.roles, gender: settings.gender, age: settings.age, country: settings.country }, verseData, verseRangeStr, lang);
+                tazakkurResult = await generateDeeperTazakkur(analysisData, { name: settings.name, roles: settings.roles, gender: settings.gender, age: settings.age, country: settings.country }, verseData, verseRangeStr);
             } else {
-                tazakkurResult = await generatePersonalizedTazakkur(analysisData.tadabbur, userProfile, lang);
+                tazakkurResult = await generatePersonalizedTazakkur(analysisData.tadabbur, userProfile);
             }
             setTazakkurNote(tazakkurResult);
         } catch (err: any) {
@@ -455,7 +455,7 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
             setIsGeneratingTazakkur(false);
             setIsGeneratingDeeperTazakkur(false);
         }
-    }, [analysisData, verseData, settings, lang, t, reflectionMode, startAyah, endAyah]);
+    }, [analysisData, verseData, settings, t, reflectionMode, startAyah, endAyah]);
     
     const handleExplainMisconception = async () => {
         if (!analysisData?.misconception || !verseData || verseData.length === 0) return;
@@ -464,8 +464,7 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
             const explanation = await explainVerseMisconception(
                 analysisData.misconception.text,
                 verseData,
-                { name: settings.name, country: settings.country, gender: settings.gender, age: settings.age, roles: settings.roles },
-                lang
+                settings
             );
             
             setAnalysisData(prev => {
@@ -806,7 +805,6 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
                 isOpen={isTafsirModalOpen}
                 onClose={() => setIsTafsirModalOpen(false)}
                 verseKey={selectedBookmarkVerseKey}
-                language={lang}
                 favoriteTafsir={settings.favoriteTafsir}
              />
 

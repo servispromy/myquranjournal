@@ -9,11 +9,9 @@ interface WelcomeProps {
     onStart: (name: string) => void;
     onOpenUpdateLog: () => void;
     isExiting: boolean;
-    language: UserSettings['language'];
-    onLanguageChange: (lang: UserSettings['language']) => void;
 }
 
-const Welcome: React.FC<WelcomeProps> = ({ onStart, onOpenUpdateLog, isExiting, language, onLanguageChange }) => {
+const Welcome: React.FC<WelcomeProps> = ({ onStart, onOpenUpdateLog, isExiting }) => {
     const [name, setName] = useState('');
     const [isInfoModalOpen, setInfoModalOpen] = useState(false);
     const { t } = useI18n();
@@ -54,29 +52,6 @@ const Welcome: React.FC<WelcomeProps> = ({ onStart, onOpenUpdateLog, isExiting, 
                             />
                         </div>
                         
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-purple-700 dark:text-purple-200/90">
-                                {t('languageLabel')}
-                            </label>
-                            <div className="flex justify-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => onLanguageChange('en')}
-                                    className={`flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors border-2 ${language === 'en' ? 'bg-purple-600 text-white border-purple-600' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 border-transparent hover:border-purple-300'}`}
-                                >
-                                    English
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => onLanguageChange('ms')}
-                                    className={`flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors border-2 ${language === 'ms' ? 'bg-purple-600 text-white border-purple-600' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 border-transparent hover:border-purple-300'}`}
-                                >
-                                    Bahasa Melayu
-                                </button>
-                            </div>
-                        </div>
-
-
                         <button
                             type="submit"
                             className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-purple-800/50 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-purple-500/30 transform hover:-translate-y-0.5"

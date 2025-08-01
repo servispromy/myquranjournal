@@ -71,7 +71,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ settings, onHistoryItemCli
                 setIsSummarizing(false);
             } else if (dailyTazakkur.tazakkurNote) {
                 setIsSummarizing(true);
-                summarizeTazakkur(dailyTazakkur.tazakkurNote, lang)
+                summarizeTazakkur(dailyTazakkur.tazakkurNote)
                     .then(newSummary => {
                         setSummary(newSummary);
                         onCacheSummary(dailyTazakkur.verseKey, newSummary);
@@ -85,7 +85,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ settings, onHistoryItemCli
                     });
             }
         }
-    }, [dailyTazakkur, onCacheSummary, lang]);
+    }, [dailyTazakkur, onCacheSummary]);
     
     const pointsSummary = useMemo(() => {
         const now = new Date();
@@ -134,7 +134,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ settings, onHistoryItemCli
 
 
     const formatDate = (dateString: string) => {
-      return new Date(dateString).toLocaleDateString(lang === 'ms' ? 'ms-MY' : 'en-CA', {
+      return new Date(dateString).toLocaleDateString('ms-MY', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -163,7 +163,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ settings, onHistoryItemCli
                 isOpen={isVerseModalOpen} 
                 onClose={() => setIsVerseModalOpen(false)} 
                 verseKey={selectedVerseKey} 
-                language={lang} 
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <div 

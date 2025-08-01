@@ -69,7 +69,6 @@ export interface UserSettings {
   name: string;
   profilePic: string | null; // base64 string
   theme: 'light' | 'dark';
-  language: 'en' | 'ms';
   gender: 'male' | 'female';
   roles: string[]; // e.g., ['father', 'student']
   roleOther?: string; // for custom 'other' role input

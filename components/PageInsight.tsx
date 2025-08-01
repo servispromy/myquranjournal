@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { UserSettings, PageInsight as PageInsightType, VerseContent, PageInsightAction, Misconception } from '../types';
 import { FiArrowLeft, FiBookOpen, FiPlay, FiPause, FiLoader, FiAlertTriangle, FiSave, FiCheck, FiBookmark, FiChevronLeft, FiChevronRight, FiShare2, FiTag, FiHome, FiHash, FiZap, FiVolume2, FiInfo, FiAlertCircle } from 'react-icons/fi';
@@ -28,7 +25,7 @@ const Spinner: React.FC<{ text: string }> = ({ text }) => (
 );
 
 export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSave, onBookmarkUpdate }) => {
-    const { t, lang } = useI18n();
+    const { t } = useI18n();
     const [pageNumberInput, setPageNumberInput] = useState('1');
     const [currentPage, setCurrentPage] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +91,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
         resetAudio();
 
         try {
-            const verses = await getVersesForPage(pageNum, lang);
+            const verses = await getVersesForPage(pageNum);
             setPageVerses(verses);
             
             const firstVerseKey = verses[0]?.verseKey;
@@ -103,14 +100,14 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
 
             if (firstVerseKey) {
                 try {
-                    const maarifResponse = await getVerseTafsir(firstVerseKey, 'en', 'Maarif Ul Quran');
+                    const maarifResponse = await getVerseTafsir(firstVerseKey, 'Maarif Ul Quran');
                     maarifTafsirContext = maarifResponse.tafsirs[0]?.content || '';
                 } catch (tafsirError) {
                     console.warn("Could not fetch Maarif Ul Quran tafsir:", tafsirError);
                 }
                 
                 try {
-                    const tazkirulResponse = await getVerseTafsir(firstVerseKey, 'en', 'Tazkirul Quran');
+                    const tazkirulResponse = await getVerseTafsir(firstVerseKey, 'Tazkirul Quran');
                     tazkirulTafsirContext = tazkirulResponse.tafsirs[0]?.content || '';
                 } catch (tafsirError) {
                     console.warn("Could not fetch Tazkirul Quran tafsir:", tafsirError);
@@ -122,8 +119,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
                 verses, 
                 maarifTafsirContext,
                 tazkirulTafsirContext,
-                { name: settings.name, roles: settings.roles, country: settings.country, gender: settings.gender, age: settings.age }, 
-                lang
+                { name: settings.name, roles: settings.roles, country: settings.country, gender: settings.gender, age: settings.age }
             );
             setPageInsight(insight);
         } catch (err: any) {
@@ -131,7 +127,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
         } finally {
             setIsLoading(false);
         }
-    }, [lang, settings, t, resetAudio]);
+    }, [settings, t, resetAudio]);
     
     const handleExplorePage = (num: number) => {
         if (num >= 1 && num <= TOTAL_QURAN_PAGES) {
@@ -247,7 +243,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
         if (!pageInsight) return;
         setIsLoadingDeeper(true);
         try {
-            const newActions = await generateDeeperPageActions(pageInsight, pageVerses, { name: settings.name, gender: settings.gender, age: settings.age }, lang);
+            const newActions = await generateDeeperPageActions(pageInsight, pageVerses, { name: settings.name, gender: settings.gender, age: settings.age, roles: settings.roles });
             setPageInsight(prev => prev ? ({ ...prev, deeperActions: [...(prev.deeperActions || []), ...newActions] }) : null);
         } catch (err: any) {
             setError(err.message || t('errorUnknown'));
@@ -263,8 +259,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
             const explanation = await explainMisconception(
                 misconception.text,
                 pageVerses,
-                { name: settings.name, country: settings.country, gender: settings.gender, age: settings.age, roles: settings.roles },
-                lang
+                settings
             );
             setPageInsight(prev => {
                 if (!prev) return null;
@@ -341,7 +336,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
                 <BookmarkVerseModal isOpen={isBookmarkModalOpen} onClose={() => setIsBookmarkModalOpen(false)} verseKey={selectedVerseKey} settings={settings} onSave={onBookmarkUpdate} />
             )}
             {isTafsirModalOpen && selectedVerseKey && (
-                <TafsirModal isOpen={isTafsirModalOpen} onClose={() => setIsTafsirModalOpen(false)} verseKey={selectedVerseKey} language={lang} favoriteTafsir={settings.favoriteTafsir} />
+                <TafsirModal isOpen={isTafsirModalOpen} onClose={() => setIsTafsirModalOpen(false)} verseKey={selectedVerseKey} favoriteTafsir={settings.favoriteTafsir} />
             )}
             
             <header className="flex items-center gap-4">
