@@ -57,6 +57,8 @@
     "disclaimerInfoBody4": "We strive to ensure all generated outputs are aligned with authentic Islamic resources, but the ultimate responsibility lies with the user.",
     "disclaimerInfoRef": "As a reference, consider the guidance in Surah Az-Zumar (39:18), which praises those who listen to speech and follow the best of it.",
     "iUnderstandButton": "I Understand",
+    "updateLogV2_2_8_date": "August 22, 2025",
+    "updateLogV2_2_8_c1": "Fixed a critical caching issue that prevented Malay translations from loading correctly after the app was deployed.",
     "updateLogV2_2_7_date": "August 21, 2025",
     "updateLogV2_2_7_c1": "Revamped 'Full Reflection History' with an accordion-style layout for better organization.",
     "updateLogV2_2_7_c2": "You can now delete saved reflections from the history page.",

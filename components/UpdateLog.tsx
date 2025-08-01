@@ -23,6 +23,13 @@ const UpdateLog: React.FC<UpdateLogProps> = ({ isOpen, onClose }) => {
 
   const updates = [
     {
+      version: '2.2.8',
+      date: t('updateLogV2_2_8_date'),
+      changes: [
+        t('updateLogV2_2_8_c1'),
+      ]
+    },
+    {
       version: '2.2.7',
       date: t('updateLogV2_2_7_date'),
       changes: [

@@ -1,4 +1,3 @@
-
 {
     "appTagline": "Di Mana Al-Quran Berbicara Kepada Anda",
     "welcomeSubtitle": "Perjalanan terpandu anda ke dalam Al-Quran.",
@@ -58,6 +57,8 @@
     "disclaimerInfoBody4": "Kami berusaha untuk memastikan semua output yang dijana selari dengan sumber Islam yang sahih, tetapi tanggungjawab muktamad terletak pada pengguna.",
     "disclaimerInfoRef": "Sebagai rujukan, pertimbangkan panduan dalam Surah Az-Zumar (39:18), yang memuji mereka yang mendengar perkataan lalu mengikuti apa yang terbaik antaranya.",
     "iUnderstandButton": "Saya Faham",
+    "updateLogV2_2_8_date": "22 Ogos 2025",
+    "updateLogV2_2_8_c1": "Memperbaiki isu kritikal berkaitan 'caching' yang menghalang terjemahan Bahasa Melayu daripada dimuatkan dengan betul selepas aplikasi di-'deploy'.",
     "updateLogV2_2_7_date": "21 Ogos 2025",
     "updateLogV2_2_7_c1": "Memperbaharui 'Sejarah Penuh Renungan' dengan susun atur gaya akordion untuk organisasi yang lebih baik.",
     "updateLogV2_2_7_c2": "Anda kini boleh memadamkan renungan yang disimpan dari halaman sejarah.",
