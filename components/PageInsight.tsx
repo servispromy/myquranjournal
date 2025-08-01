@@ -263,7 +263,7 @@ export const PageInsight: React.FC<PageInsightProps> = ({ settings, onBack, onSa
             const explanation = await explainMisconception(
                 misconception.text,
                 pageVerses,
-                { name: settings.name, country: settings.country, gender: settings.gender, age: settings.age },
+                { name: settings.name, country: settings.country, gender: settings.gender, age: settings.age, roles: settings.roles },
                 lang
             );
             setPageInsight(prev => {

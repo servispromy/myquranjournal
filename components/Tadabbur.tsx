@@ -464,7 +464,7 @@ const Tadabbur: React.FC<TadabburProps> = ({ settings, onSettingsClick, onHistor
             const explanation = await explainVerseMisconception(
                 analysisData.misconception.text,
                 verseData,
-                { name: settings.name, country: settings.country, gender: settings.gender, age: settings.age },
+                { name: settings.name, country: settings.country, gender: settings.gender, age: settings.age, roles: settings.roles },
                 lang
             );
             
