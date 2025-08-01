@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQuran Journal</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0369a1">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link rel="stylesheet" href="https://esm.sh/react-image-crop@^11.0.6/dist/ReactCrop.css" />
+    <style>
+      html {
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+      }
+      .arabic-text {
+        font-family: 'Amiri', 'Noto Naskh Arabic', Arial, sans-serif;
+      }
+      .logo-q {
+        font-family: 'Libre Baskerville', serif;
+        font-weight: 800;
+        font-size: 1.10em;
+        /* A more negative value pulls the character down, preventing top cropping on mobile. */
+        vertical-align: 0.0em;
+
+      }
+      
+      body {
+        --bg-pattern-light: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d8b4fe' fill-opacity='0.1'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        --bg-pattern-dark: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a855f7' fill-opacity='0.07'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        background-color: #f1f5f9; /* slate-100 */
+        background-image: var(--bg-pattern-light);
+      }
+      .dark body {
+        background-color: #020617; /* slate-950 */
+        background-image: var(--bg-pattern-dark);
+      }
+
+      /* For custom scrollbar aesthetics */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(192, 132, 252, 0.5); /* purple-400 with opacity */
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(192, 132, 252, 0.7);
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+      }
+      html.light ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Splash Screen Styles */
+      #splash-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        /* It will inherit the body's background */
+        transition: opacity 0.5s ease-out;
+      }
+      #splash-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Animated Splash Background */
+      .animated-gradient-bg {
+          background: linear-gradient(315deg, #5b21b6 3%, #020617 38%, #1d4ed8 68%, #7e22ce 98%);
+          animation: gradient 15s ease infinite;
+          background-size: 400% 400%;
+          background-attachment: fixed;
+      }
+
+      @keyframes gradient {
+          0% { background-position: 0% 0%; }
+          50% { background-position: 100% 100%; }
+          100% { background-position: 0% 0%; }
+      }
+
+      /* Floating Lights Animation */
+      .floating-light {
+        position: absolute;
+        width: 0px;
+        opacity: .75;
+        background-color: #a78bfa; /* A light purple */
+        box-shadow: #a78bfa 0px 0px 20px 2px, #60a5fa 0px 0px 30px 5px; /* Purple and Blue glow */
+        top: 100vh;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        border-radius: 50%;
+      }
+
+      .x1{
+        -webkit-animation: floatUp 4s infinite linear;
+        -moz-animation: floatUp 4s infinite linear;
+        -o-animation: floatUp 4s infinite linear;
+        animation: floatUp 4s infinite linear;
+        -webkit-transform: scale(1.0);
+        -moz-transform: scale(1.0);
+        -o-transform: scale(1.0);
+        transform: scale(1.0);
+      }
+
+      .x2{
+        -webkit-animation: floatUp 7s infinite linear;
+        -moz-animation: floatUp 7s infinite linear;
+        -o-animation: floatUp 7s infinite linear;
+        animation: floatUp 7s infinite linear;
+        -webkit-transform: scale(1.6);
+        -moz-transform: scale(1.6);
+        -o-transform: scale(1.6);
+        transform: scale(1.6);
+        left: 15%;
+      }
+
+      .x3{
+        -webkit-animation: floatUp 2.5s infinite linear;
+        -moz-animation: floatUp 2.5s infinite linear;
+        -o-animation: floatUp 2.5s infinite linear;
+        animation: floatUp 2.5s infinite linear;
+        -webkit-transform: scale(.5);
+        -moz-transform: scale(.5);
+        -o-transform: scale(.5);
+        transform: scale(.5);
+        left: -15%;
+      }
+
+      .x4{
+        -webkit-animation: floatUp 4.5s infinite linear;
+        -moz-animation: floatUp 4.5s infinite linear;
+        -o-animation: floatUp 4.5s infinite linear;
+        animation: floatUp 4.5s infinite linear;
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        -o-transform: scale(1.2);
+        transform: scale(1.2);
+        left: -34%;
+      }
+
+      .x5{
+        -webkit-animation: floatUp 8s infinite linear;
+        -moz-animation: floatUp 8s infinite linear;
+        -o-animation: floatUp 8s infinite linear;
+        animation: floatUp 8s infinite linear;
+        -webkit-transform: scale(2.2);
+        -moz-transform: scale(2.2);
+        -o-transform: scale(2.2);
+        transform: scale(2.2);
+        left: -57%;
+      }
+
+      .x6{
+        -webkit-animation: floatUp 3s infinite linear;
+        -moz-animation: floatUp 3s infinite linear;
+        -o-animation: floatUp 3s infinite linear;
+        animation: floatUp 3s infinite linear;
+        -webkit-transform: scale(.8);
+        -moz-transform: scale(.8);
+        -o-transform: scale(.8);
+        transform: scale(.8);
+        left: -81%;
+      }
+
+      .x7{
+        -webkit-animation: floatUp 5.3s infinite linear;
+        -moz-animation: floatUp 5.3s infinite linear;
+        -o-animation: floatUp 5.3s infinite linear;
+        animation: floatUp 5.3s infinite linear;
+        -webkit-transform: scale(3.2);
+        -moz-transform: scale(3.2);
+        -o-transform: scale(3.2);
+        transform: scale(3.2);
+        left: 37%;
+      }
+
+      .x8{
+        -webkit-animation: floatUp 4.7s infinite linear;
+        -moz-animation: floatUp 4.7s infinite linear;
+        -o-animation: floatUp 4.7s infinite linear;
+        animation: floatUp 4.7s infinite linear;
+        -webkit-transform: scale(1.7);
+        -moz-transform: scale(1.7);
+        -o-transform: scale(1.7);
+        transform: scale(1.7);
+        left: 62%;
+      }
+
+      .x9{
+        -webkit-animation: floatUp 4.1s infinite linear;
+        -moz-animation: floatUp 4.1s infinite linear;
+        -o-animation: floatUp 4.1s infinite linear;
+        animation: floatUp 4.1s infinite linear;
+        -webkit-transform: scale(0.9);
+        -moz-transform: scale(0.9);
+        -o-transform: scale(0.9);
+        transform: scale(0.9);
+        left: 85%;
+      }
+
+      @-webkit-keyframes floatUp{
+        0%{top: 100vh; opacity: 0;}
+        25%{opacity: 1;}
+        50%{top: 0vh; opacity: .8;}
+        75%{opacity: 1;}
+        100%{top: -100vh; opacity: 0;}
+      }
+      @-moz-keyframes floatUp{
+        0%{top: 100vh; opacity: 0;}
+        25%{opacity: 1;}
+        50%{top: 0vh; opacity: .8;}
+        75%{opacity: 1;}
+        100%{top: -100vh; opacity: 0;}
+      }
+      @-o-keyframes floatUp{
+        0%{top: 100vh; opacity: 0;}
+        25%{opacity: 1;}
+        50%{top: 0vh; opacity: .8;}
+        75%{opacity: 1;}
+        100%{top: -100vh; opacity: 0;}
+      }
+      @keyframes floatUp{
+        0%{top: 100vh; opacity: 0;}
+        25%{opacity: 1;}
+        50%{top: 0vh; opacity: .8;}
+        75%{opacity: 1;}
+        100%{top: -100vh; opacity: 0;}
+      }
+
+      /* Modal Animation */
+      @keyframes modal-enter {
+          from { opacity: 0; transform: scale(0.95) translateY(10px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+      }
+      .animate-modal-enter {
+          animation: modal-enter 0.3s ease-out forwards;
+      }
+      @keyframes modal-exit {
+          from { opacity: 1; transform: scale(1) translateY(0); }
+          to { opacity: 0; transform: scale(0.95) translateY(10px); }
+      }
+      .animate-modal-exit {
+          animation: modal-exit 0.3s ease-in forwards;
+      }
+
+      /* Generic fade-in for other components */
+      @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+      .animate-fade-in {
+          animation: fade-in 0.5s ease-out forwards;
+      }
+      
+      /* Page Transition */
+      @keyframes page-fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+      .animate-page-fade-in {
+          animation: page-fade-in 0.3s ease-out forwards;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.10.0",
+    "react-icons/": "https://esm.sh/react-icons@^5.5.0/",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "react-image-crop": "https://esm.sh/react-image-crop@^11.0.6"
+  }
+}
+</script>
+<script>
+    // Add dark mode class before React loads to prevent flash of light theme
+    if (localStorage.myQuranJournalSettings) {
+        try {
+            const settings = JSON.parse(localStorage.myQuranJournalSettings);
+            if (settings.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.add('light');
+            }
+        } catch(e) {}
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // For first-time users, respect system preference
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.add('light');
+    }
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="text-gray-800 dark:text-slate-200 antialiased transition-colors duration-300">
+    <div id="splash-screen"></div>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
+                    // Logic for seamless updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        if (newWorker) {
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // A new service worker is installed and waiting.
+                                    // Send a message to the new worker to activate it immediately.
+                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                }
+                            });
+                        }
+                    });
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+                
+                // Reload the page once the new service worker has taken control.
+                let refreshing;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (refreshing) return;
+                    window.location.reload();
+                    refreshing = true;
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "MyQuran Journal(Public Base Model)",
+  "description": "An interactive PWA to help users understand and reflect on Quranic verses through a structured and guided framework, promoting deeper comprehension and connection with the Quran.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
