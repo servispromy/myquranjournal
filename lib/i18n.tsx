@@ -1,5 +1,3 @@
-
-
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { UserSettings } from '../types';
 
@@ -16,7 +14,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const fetchTranslations = async () => {
       try {
-        const response = await fetch(`/locales/ms.json`);
+        const response = await fetch('./locales/ms.json');
         if (!response.ok) {
           throw new Error(`Language file for 'ms' not found`);
         }
