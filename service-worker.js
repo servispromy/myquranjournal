@@ -1,11 +1,10 @@
-const CACHE_NAME = 'tadabbur-quran-cache-v2.2.8';
+const CACHE_NAME = 'tadabbur-quran-cache-v2.2.9';
 const urlsToCache = [
   './',
   './index.html',
   './index.tsx',
   './manifest.json',
-  './locales/ms.json',
-  './favicon.svg'
+  './locales/ms.json'
 ];
 
 self.addEventListener('install', event => {

@@ -1,6 +1,6 @@
 import { TadabburLevel, TadabburDifficulty, TadabburLevelDetail } from './types';
 
-export const APP_VERSION = "2.2.8";
+export const APP_VERSION = "2.2.9";
 export const TOTAL_QURAN_VERSES = 6236;
 export const TOTAL_QURAN_PAGES = 604;
 
